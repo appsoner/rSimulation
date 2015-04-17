@@ -1,0 +1,1231 @@
+
+
+\documentclass[12pt]{article}%
+\usepackage[tbtags]{amsmath}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}%
+\setcounter{MaxMatrixCols}{30}
+\providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
+\setlength{\headsep}{0cm} \setlength{\oddsidemargin}{0cm}
+\setlength{\textwidth}{16.8cm} \setlength{\textheight}{22cm}
+\renewcommand{\baselinestretch}{1.1}
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{acknowledgement}{Acknowledgement}[section]
+\newtheorem{algorithm}{Algorithm}[section]
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{case}{Case}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{conclusion}{Conclusion}[section]
+\newtheorem{condition}{Condition}[section]
+\newtheorem{conjecture}{Conjecture}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{criterion}{Criterion}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{notation}{Notation}[section]
+\newtheorem{problem}{Problem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{property}{Property}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{solution}{Solution}[section]
+\newtheorem{summary}{Summary}[section]
+\newenvironment{proof}[1][Proof]{\noindent\textit{#1.} }{\ \hfill\rule{0.3em}{0.5em}}
+\font\smit=cmti12 \font\smbf=cmbx12
+\def\E{\mathrm{E}}
+\def\dis{\displaystyle}
+
+
+
+
+
+
+
+\input epsf
+\def\seteps#1#2#3#4{\vskip0in\relax\noindent\hskip#1\relax
+ \epsfxsize=#2\epsfysize=#3\epsfbox{#4}}
+\def\centereps#1#2#3{\vskip0in\relax\centerline{\epsfxsize=#1\epsfysize=#2\epsfbox{#3}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\bSig\mathbf{\Sigma}
+\newcommand{\VS}{V\&S}
+\newcommand{\tr}{\mbox{tr}}
+\input seteps
+\def\dis{\displaystyle}
+\def\Pr{{\rm Pr}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\voffset-5mm
+
+\begin{document}
+
+\title{\bf  Statistical Inference for Partially Nonlinear Single-index Models with Application to Correlated Medical Costs\footnote{This work was partially supported by the NSFC under Grant No.11271317 and Zhejiang Provincial Planning Projects of Philosophy and Social Science under Grant No. 12JCJJ17YB.}  }
+
+
+\author{Xiaobing Zhao \ Guosheng  Xu\\ School of Mathematics and Statistics, Zhejiang University \\ of Finance and Economics, Hangzhou, Zhejiang Province, China\\ \\
+ Lei Liu \\
+Department of Preventive Medicine, Northwestern University,\\ Chicago, IL, U.S.A.}
+\date{}
+\maketitle
+
+\begin{abstract}
+
+Medical costs are often to be skewed and heteroscedastic, and having a complicated relation with covariates. The mean function regression models with low-dimensional covariates have been extensively considered in liternature, however, it is an important issue to find a rubust alternative to find the underlying relationship between the medical costs and the high-dimensional covariates. In this paper, we propose a partially nonlinear single-index model to analyze the medical costs, the minimizing average check loss estimation  with modified average quantile regression  procedure is adapted to conduct quantile regression of this model, and an adaptive lasso penalized variable selection method is cansidered to find some significant factors of the covariates. The asymptotic properties of the above estimators are established as well. Some simulation studies and the Medical Expenditure Pandel Survey  dataset are carried to asses the preformance of the proposed model and methods.
+
+
+
+\vskip3mm
+
+\noindent{\it Keywords}: Medical costs, high-dimensional covariates, partially nonlinear, single-index, quantile regression, minimizing average check loss estimaation,variable selection, adaptive lasso.
+\end{abstract}
+
+\vskip3mm
+
+\maketitle
+
+\baselineskip20pt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{s:intro}
+
+Modeling medical costs is of great interest in health economics and health policy, such as in the USA, the health care costs per person reached $\$$US8,100, for a total of $\$$US2.5 trillion, which accounted for 17\% of the gross domestic product in 2009 (cf. Chen {\it et al.}, 2014). Medical cost data are routinely collected by hospitals, disease registries, claims of health insurers, etc. The major task of the analysis of the medical costs is identified the risks of covariates associated with the corresponding to the medical costs. The analysis of the medical costs, however, complicate and pose major challenges in their statistical analysis duo to their characters including severe skewness, heteroscedasticity and non-normality. Hence it's very important to find an innovative statistical approach to analyze the medical costs.
+
+Various statistical methods to analyze the medical costs can be found in liternature, One can refer to a comprehensive overview in a special issue devoted to this topic in Medical Care (Vol. 47, No.7 supplement 1, July 2009). In liternature, the approaches can be divided into two classes for a brief review: to analysis the  total medical costs ( see such as Lin {\it et al.}, 1997, Zhao and Zhou, 2014 ), and to analyze the  longitudinal (panel survey) medical costs (see such as Liu, 2009, Chen {\it et al}., 2014 ).
+
+For the analysis of longitudinal (panel survey) medical costs, it is great challenge to consider appropriately their complicated correlation of the medical costs.
+The first correlation is between the medical costs and the terminal events (such as death) and/or the observation processes, see such as Liu {\it et al.} (2008a), Zhao {\it et al.} (2014), Sun {\it et al.} (2012) and among others. The second is the longitudianl dependency of the repeated observations among the same subject. In liternature, there are three main approaches (see Zeger and Liang, 1992) to account for the within-subject correlation (longitudinal dependency) of the medical costs including marginal models (see Chen, {\it et al.},2014, Chen {\it et al.}, 2012), transition (Markove) models (see such as Castelli {\it et al.}, 2007; Zhao and Zhou, 2012) and random or fixed effects models (see Liu {\it et al.}, 2008b, Liu, 2009).
+
+Most recently, an natural analogue for correlated responses of marginal models, the generalised linear models (GLM) have been extensively discussed by many authors, such as Blough {\it et al.} (1999), Manning (2001,2005), in which the regression and within-subject correlation are modelled separately, however, the disadvantages have been found that this approach could not account conveniently for the correation of the medical costs, and the effects of the time-varying covariates can not be enough addressed (Zeger and Liang, 1992), Most recently, Chen {\it et al.} (2013, 2104) extended the classic generalised linear models to another one by adding unspeicified nonlinear function to account for the time-varying covariates, but still remianing the link function to be known function.
+
+To account for the within-subject correlation to be more flexible and relax the link function to be unspecified in generalised linear model, in this paper, we proposed an partially nonlinear single-index model (PNSIM), the nonlinear compenent is used to deal with the time-varying covariate, and the single-index model is applied to deal with the mean function of the medical costs but with unspecified link function, and furthermore, single-index model is usfull model for the high-dimensional covariates. For longitudinal or panel data, a fixed effect variable is used to account for the correlation among observations within the same subject or cluster,  it's different from that of Chen {\it et al.} (2014) through a covariate matrix of response with the same subject.
+
+The above proposed model is a sub-model of general partially nonplinear models which have been researched by authors including Wahba (1990), Liang (1995), Gao and Liang (1997), Li and Nie (2008), Li and Mei (2013) and Song {\it et al.} (2010) with a pre-specified link function of single-index in their paper. However, litter has been done on the partially nonlinear single-index model with unspecified link funtion of the single-index model. 
+
+In the analysis of the medical costs, the mean cost is the mian interest in health economics studies, however, the mean function might be unrobust. Recently, some robust approach can be found in liternature, such as the median cost is proposed by Bang and Tsiatis (2002),  Dominici and Zeger (2005) and Dominic {\it et al.} (2005) developed a smooth quantile ratio approach to estimate the mean cost, Wang and Zhou (2010) proposed a quantile regression approach to estimate the transformed cost data. In this paper, the quantile regression is applied to the partially nonlinear sing-index model, quantile regression might offer a systematic strategy for testing how covariates influence the location, scale, and shape of the entrie response distribution (Tang {\it et al.}, 2013), and hence the quantile regression can accommodate non-normal errors, as often seen in the analysis of medical cost data. 
+
+Single-index is a widely used dimensional reduction approach to avoid ``curse of dimensionality", which also has been used in the analysis of the medical cost data (see Zhou and Liang, 2006, Chen {\it et al.}, 2014), however, it's not sufficient for the covariates which may include many irrevant compenents. In these case, sparse model is often considered superior, due to the enhancements of the model predictability and interpretability (Lv {\it et al.}, 2014). In this paper, variable selection method will be considered to the quantile regression model of the partially nonlinear single-index model.
+It is challenging to preform variable selection in the proposed model with unspecified link function of the single-index and unknown nonlinear function to be estimated. There are many authors deveploped variable selection for (partially linear) single-index model, or quantile regression with (partially linear) single-index model, such as Liang {\it et al.} (2010) proposed an variable selection method for single-index model, an variable selection for the composite quantile regression of single-index model has been considered by Fan {\it et al.} (2013). And most rencently, Lv {\it et al.} (2014) investigaed an variable selection method for quantile regression of partially linear single-index model. However, there has been litter research on (quantile regression of) partially nonlinear single-index model, let alone the single-index with unspecified link function.
+
+In this paper, we present a comprehensive study of partially nonlinear single-index model and consider its application to the anaylsis of medical cost data. To the best of our knowledge, the proposed model with unspecified link function of the single-index and the statistical inference of variable selection for quantile regresion of partially nonlinear single-index model appears to be the first paper in the liternature.
+
+There are three main contributions of this study. The first is to construct a partially nonlinear single-index model to analyze medical cost data which also motivated by the works of Chen {\it et al. } (2014). The model, which has been researched by many authors, however, is the first time to be discussed with unspecified link function of single-index, and this pose a challenge in statistical inference as it has at least two nonparametric compenents to be estimated.
+ The second is that quantile regression method is applied to make statistical inference to the proposed model, this will give a systematic strategy for testing how covariates influence, and provide some robust statistical results. The third, an variable selection method is used for quantile regression of partially nonlinear singe-index model, it's an extension of Xia and Harlde (2006) and Li and Liang (2008) for semiparametric setting. 
+
+We will assess the proposed model together with their statistical inference methods by some simulation results, in which various non-normal errors can be considered, and just as done in Chen {\it et al.} (2014), some combinations for nonparametric compenents of the link function of single-index model and the nonlinear function will be checked as well. The real data of the Medical Expenditure Panel Survey (MEPS) data will be analyzed. In simulation study and real data analysis, the minimizing average check loss estimation (MACLE) with modified average quantile regression (MAQR) procedure is adapted to conduct quantile regression of this PNSIM, and an adaptive lasso penalized variable selection method is cansidered. 
+
+
+The rest of paper is organized as follows. In Section 2, we review existing models and specify our models. Section 3 we intruoduce the estimation method and the calculation procedure of quantile regression for paryially nonlinear single-index model, the asymptotic properties of the estimators will be established as well.
+In Section 4, adaptive lasso penalized quantile regression method is proposed and its oracle property is presented. Some simulation results are reported in Section 5, and an example of application is illustrated in Section 6, followed by concluding remarks in Section 7.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Concluding Remark: zero-vaules cost? give an motivation example in the second section?
+
+%if the mean function $g(x)=\log(x)$, or with specified link function, it reduces to the model of Chen {\it et al.} (2013,2104), if ?????
+
+% if f(t)==0, this single-index model for medical cost has been discussed by Zhou and Liang (2006) ???
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Model Specification}
+
+The single-index model is a natural generalization of thr classic linear regression models and a restrictive version of a completed nonparametric model,
+it is of one of effective tools to overcome one marjor difficult so-called `` curse of dimensionality" in a general nonparametric regression model, which 
+can lead the difficulty and inefficient of smoothing in high-dimensional settings. The single-index model has been extensively discussed by many authors, such as 
+Powell {\it et al.} (1989), Duan and Li (1991), Liang and Wang (2005), One can refer to Horowitz (1998) for the detailed discussion of model.
+
+In the analysis of medical cost data, the single-index model also has been consdered by Zhou and Liang (2006), where a single-index two-part regression models were researched to analyze skewed health care cost data, Chen {\it et al.} (2014) proposed a partial linear single-index to model repeated mensures data of medical cost data.  However, The single-index model is not sufficient to explain the variation of responses via covariates, such as in the analysis of MEPS dataset of Chen {\it et al} (2014), their study found that there may be exist nonlinear covariate effect for some covariates of interest, for example, age (Chen {\it et al.}, 2013, 2014 ), and hence, a partially linear model were prposed in their paper to model the mean function of the medical cost data. 
+
+For MEPS dataset, we includes 2,139 individuals aged between 65 and 84 years with 1,556 households from the MEPS 2010 Full Year Consolidation Data File of Household Survey. the histogran of the medical costs of Chen {\it et al.} (2014) implies that the medical costs are skewed to right and possible heteroscedastic. 
+Furthermore, medical costs of individuals in the elderly households are likely to be correalted for some reasons including such as health behaviors, attitudes and believes among individuals in the same household.
+
+As mentioned in the above, the partially linear model might not be sufficient to model the medical cost dataset including skewed, heteroscedasticity, sever skewness and non-normality, since it may be enccount the difficulty and inefficient of smoothing in high-dimensional settings. In this paper, we propose an alternative to model the medical cost dataset with longitudinal obserbations (panel survay)  as follows:
+\begin{align}
+Y_{ij} &=g (X_{ij}^\top \beta) + f(t_{ij}) + \alpha_{i} + \varepsilon_{ij} \nonumber\\
+       &=q_{1}(Z_1(ij))+q_{2}(Z_2(ij))+\alpha_i + \varepsilon_{ij}, \label{21}
+\end{align}
+where $Z=(Z_1, Z_2)^\top$ with $Z_1(ij)=X_{ij}^\top \beta$ and $Z_2(ij)=t_{ij}$, $Y_{ij}$ is the medical cost of the $j^{th}$ observation of the subject belongs to the cluster $i^{th}$ ($j=1,\dots,n_i; i=1,\dots,n$),  $X_{ij} \in R^p $ and $t_{ij}\in R^1$ to be the linear covariate and nonlinear covariates corresponding to the outcome $Y_{ij}$. Duo to the curse of dimensionality, it is assumed through this paper that $t_{ij}$ is a univariate continuous random variable
+(Li and Nie, 2008), $\alpha_{i}$ is unobservable time-invariate effect distributed independently across cluster $i^{th}$, and $ \varepsilon_{ij}$ are the error terms, and are assumed to be independently identically distributed with mean $0$ and finite variable $\sigma^2>0$, and $(X_{ij}, t_{ij}), \varepsilon_{ij}$  are independent. And the $g(\cdot)$ and $f(\cdot)$ are unspecified functions to be estimated, $\beta\in R^p$ is unknown parameter. For indentifiability, we assume $||\beta||=1$ and the first nonzero element of $\beta$ is positive, where $||\cdot||$ denotes the Euclidean norm. For convenience, we call $\beta$ index parameter, $g(\cdot)$ index function and $f(\cdot)$ nonlinerar function. Model (\ref{21}) is referred to be partially nonlinear single-index model (PNSIM) in this paper.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% to identify model (2.1), sjould we assume E[g]=E[f]=0? 
+% random effects \alpha_{ij} is assumed to be known distribition?
+% g(\cdot) is assumed to be known?
+% random effect is assumed to be through error x_{ij}^\top \gamma *  \varepsilon_{ij}?
+
+%\vskip2cm
+%\noindent{\bf Remark :} if have any problem, we can sort another model, that is, we can consider sufficient dimension reduction of model below:
+%\begin{equation}
+%Y_{ij}=\mu_i + g (X_{ij}^\top \beta_1,\dots, X_{ij}^\top \beta_p) + f(t_{ij}) + \alpha_{i} + \varepsilon_{ij}, \label{21}
+%\end{equation}
+
+%partial sufficient dimension reduction for longitudinal data can be applied.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Many existing semiparametric and nonparametric models are special cases of model (\ref{21}). For instance, without the fixed effect $\alpha_{i}$,  model (\ref{21}) reduces to partially nonlinear model, which has been discussed by Song {\it et al.} (2010) when $g(\cdot)$ is assumed to be known. Provided that the index function $g(\cdot)=1$, model (\ref{21}) reduces to partially linear model of such as Hardle {\it et al.} (2000), and references therein, and which has been discussed recently by Chen {\it et al.} (2014). It also includes nonparametric model with $g(\cdot)=0$ (see Hardle,1990) and single-index model (see Horowitz, 1998) with $f(\cdot)=0$. If including the fixed effect $\alpha_i$, model (\ref{21}) were discuused by Lamarch (2010), Galvao {\it et al.} (2013) with $f(\cdot)=0$ and $g(\cdot)=1$, Chen {\it et al.} (2013) and  Lai {\it et al.} (2013) with $f(\cdot)=0$; and Ai {\it et al.} (2014) with $g(\cdot)=1$. 
+
+
+The next subsection, the minimizing average check loss estimation (MACLE) and modified average quantile regression (MAQR) procedure and the adaptive lasso penalized MACLE variable selection are proposed to model (\ref{21}). The asymptotic properties of the estimators will be established as well and the proofs can bee found in the Appendix.
+
+
+% fixed effect for panel data? fixed effect for longitudinal data?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip3mm
+
+\noindent{\bf Remark 1}: The fixed effect $\alpha_i$ incluing in (\ref{21}) can be explained to be individual intercepts, it is intended to capture individual specific sources of variability, or unobservable heterogeneity that was not adequately controlled by other covariates (Galvo {\it et al.}, 2013). As done in Lamarch (2010), we also assume that the individual effects does not represent a distributional shift, since it is unrealistic to estimate it when the number of observations on each cluster is small (Koenker, 2004). The individual effect is then a pure location shift effect $\alpha_i$ of the response, it implies that the distribution of $Y_{ij}$ for each cluster conditional on covartiates $X_{ij}$ and $t_{ij}$ have the same shape, but different location as long as the $\alpha_i's$ are different (Lamarch, 2010).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 3mm
+
+\noindent{\bf Remark 2}: For identifiability of model (\ref{21}), it has been discussed by many authors. Obviously, it's reuqired to have different conditions of identification for the different staitistical inference procedures. Song {\it et al.} (2010) apply sieve least squares estimation to the coefficient of index and the nonparametric component by assuming that the index function $g(\cdot)$ is a strictly monotone function for identifiability. Fan and {\it et al.} (1998) assume that $E[g(X_{ij})]=E[f(t_{ij})]=0$ in their average regression surface method,   Yu and Lu (2004) and Cheng {\it et al.} (2011) proposed to use the condition of $E[q_{u,\tau}(Z_u)]=0$ (see (\ref{31}) below) for model identification in quantile regression, which is based on the back-fitting algorithm.  If $E[g(X_{ij})]\not=0$ and $E[f(t_{ij})]\not=0$, we can rewritten $g^*(X_{ij})=g(X_{ij})-E[g(X_{ij})]$ and $f^*(t_{ij})=f(t_{ij})-E[f(t_{ij})]$, this implies that $E[g^*(X_{ij})]
+=E^*[f(t_{ij})]=0$ and supressed $E[g(X_{ij})]+E[f(t_{ij})]$ (constant) into $\alpha_i$. Then, we will follow the identification of Cheng {\it et al.} (2011) for their modified average quantile regression. It can be seen from the Remark 1 of Yu and Lu (2004) that  $E[g(X_{ij})]=E[f(t_{ij})]=0$ implies that $E[q_{u,\tau}(Z_u)]=0$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Quantile Regression for PNSIM  \label{section3}}
+
+
+\setcounter{equation}{0} 
+
+%\subsection{Local Estimating equation}
+
+This subsection, we develop the local linear quantile regression to PNSIM. Given $\tau\in (0,1)$, we define the quantile regression model as follows:
+\begin{align}
+y_{ij} &=g_{\tau} (X_{ij}^\top \beta(\tau) ) + f_{\tau}(t_{ij}) +\alpha_i(\tau) + \varepsilon_{ij}(\tau) \nonumber\\  
+       &=q_{1,\tau}(Z_1(ij))+q_{2,\tau}(Z_2(ij))+\alpha_i(\tau) + \varepsilon_{ij}(\tau), \label{31}
+\end{align}
+where $\beta (\tau)$ is a $p\times 1$ vector of parameters, $\alpha_i(\tau)$ is a scalar individual effect for each cluster $i$, and  $\varepsilon_{ij}(\tau)$ is the innovation term whose $\tau^{th}$ conditional quantile is zero given $(X_{ij},t_{ij},\alpha_i)$. The conditional $\tau-$quantile of $y_{ij}$ given $(X_{ij},t_{ij}, \alpha_i)$ is denoted by $Q_{y_{ij}}(\tau |X_{ij}, t_{ij},\alpha_i)=\inf \{y: Pr(y_{ij}<y| X_{ij},t_{ij},\alpha_i)$. The partially nonlinear single-index model assumes that the $\tau^{th}$ conditional quantile function of $y_{ij}$ can be expressed as 
+\begin{equation}
+Q_{y_{ij}}(\tau |X_{ij}, t_{ij},\alpha_i)=g_{\tau} (X_{ij}^\top \beta(\tau) ) + f_{\tau}(t_{ij}) +\alpha_i(\tau). \label{329}
+\end{equation}
+
+For notational similicity, we omit $\tau$ from such as $\beta(\tau)$ in model (\ref{31}) whereever clear from the context, but it is important to keep in mind that those quantities are $\tau-$specific. Then, the estimator of the true parameter vector $(\beta(\tau), \alpha(\tau))^\top$ is defined as the minimizer of the following objective function:
+\begin{equation}
+{\cal L}(\beta(\tau), \alpha(\tau))= \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left( y_{ij}-g (X_{ij}^\top \beta ) - f(t_{ij}) -\alpha_i \right), \label{323}
+\end{equation}
+where $\alpha=(\alpha_1, \dots,\alpha_n)^\top$, and $\rho_{\tau}(u)=|u|+(2\tau-1)u$ is the check loss function at $\tau \in(0,1)$. 
+
+
+To estimate the parametets and nonparametric components of model (\ref{323}), the classic two-steps procedure can be applied, the fisrt to estimate the nonparametric components $g(\cdot)$, $f(\cdot)$ and $\alpha_i$ by replacing $\beta$ with its estimators. The second is to estimate the parameters $\beta$  with known or estimated nonparametric components $g(\cdot)$, $f(\cdot)$ and $\alpha_i$. 
+
+It's well known that the first step is based on a standard additive model, which has been researched by many authors, such as {\it backfitting algorithm} of Yu and Lu (2004), however, it is no guarantee for convergence and its iterative algorithm make it difficult to get asymptotic reults (Cheng {\it et al.}, 2011); {\it average quantile} estimation of Gooijer and Zerom (2003), it's a modification of backfitting estimation by marginal integration, but it also has some shortcoming including computational inconvenience and not robustness to correlted covariares
+(Cheng {\it et al.}, 2011). Most recently, Cheng {\it et al.} (2011) propsed an efficient estimation method to the additive models, which is referred to {\it modified average quantile regression} estimation, and have some advantages such as it also computationally more attractive and more robust for correlated covariates than the average quantile estimation.  
+
+In this paper, we will adapt modified average quantile regression estimation of Chen {\it et al.} (2011) to the estimators of the nonparametric components. We will begin the statistical inference of our model by introducing the {modified average quantile regression estimation} in the next.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Modified average quantile regression}
+
+
+Recall that $Z=(Z_1, Z_2)^\top$ with $Z_1(ij)=X_{ij}^\top \beta$ and $Z_2(ij)=t_{ij}$. Let $Z_u$ the $u$th element of $Z$ and $W_u$ the set of all $Z$ variables excluding $Z_u$, that is, $W_u=(Z_1, \dots,Z_{u-1}, Z_{u+1}, \dots, Z_r)^\top$ and $Z=(Z_u, W_u)$. Assume that $f_u(\cdot)$ and $f_W(\cdot)$ are the density functions of variables $X_u$ and $W_u$. We define
+\begin{equation}
+\Phi(z_u,w_u)={ f_u(z_u) f_W(w_u) \over f(z_u,w_u) }. \label{339}
+\end{equation}
+One can see from the function of (\ref{339}) that it has the following features 
+\begin{equation}
+E\left[ \Phi(Z_u,W_u)|Z_u=z_u\right]=1, \quad, \hbox{and} \quad E\left[ \Phi(Z_u, W_u) q_{k,\tau}(Z_k))|Z_k=z_k \right]=0 \quad \hbox{for} \quad k\not=u. \label{349}
+\end{equation}
+Conditional on $Z_u=z_u$, it implies from (\ref{329}) and (\ref{349}) that
+\begin{equation}
+E\left[ \Phi(Z_u,W_u) Q_{y}(\tau |Z(ij),\alpha)|Z_u=z_u\right]\buildrel def \over = q^*_{u,\tau}(z_u)=\alpha_i(\tau)+q_{u,\tau}(z_u), u=1,2. \label{359}
+\end{equation}
+Hence, we can estimate $q_{u,\tau}(z_u)$ by the modified average quantile estimation of Cheng {\it et al.} (2011) as follows
+\begin{equation}
+\hat q_{u,\tau}(z_u)=\hat q^*_{u,\tau}(z_u)-\hat \alpha_{i}(\tau)  \label{37}
+\end{equation}
+provided that we can give the estimators $\hat q^*_{u,\tau}(z_u)$ and $\hat \alpha_{i}(\tau)$, in fact, these estimators can be defined as below.
+\begin{equation}
+\hat \alpha_i(\tau)={1\over n_i} \sum_{j=1}^{n_i} \hat Q_{y_{ij}}(\tau |Z({ij}),\alpha), i=1,2,\dots, n, \label{3899}
+\end{equation}
+where $\hat Q_{y_{ij}}(\tau |Z(ij),\alpha)$ is a consistent estimator of $Q_{y_{ij}}(\tau |Z({ij}),\alpha)$, which will be given (\ref{3409}) below. It is easily konwn that (\ref{3899}) is an empirical version of $\alpha_i(\tau)=E[Q_{y_{ij}}(\tau |Z({ij}),\alpha)]$ under the condition of identification $E[q_{u,\tau}(Z_u)]=0$. An estimator $\hat q^*_{u,\tau}(z_u)$ can be obtained from Jones {\it et al.} (1994) as follows
+\begin{equation}
+\hat q^*_{u,\tau}(z_u)={1 \over {Nh_1} }\sum_{i=1}^n \sum_{j=1}^{n_i} K\left( { {z_u-Z_u(ij)} \over h_1 }\right) {\hat f_w(W_u(ij) \over \hat f(Z(ij)) }  \hat Q_{y_{ij}}(\tau |Z({ij}),\alpha), \label{3999}
+\end{equation}
+where $N=\sum_{i=1}^n n_i$, $K(\cdot)$ is a kernel function, $h_1$ is a bandwidth, $\hat f_w(\cdot)$ and $\hat f(\cdot)$ are the kernel estimators of the corresponding density functions.
+Obviously, (\ref{3999}) is also an empirical vesion of the left hand of (\ref{359}).
+
+Now we can discuss the estimation of $Q_{y}(\tau |z,\alpha)$ which has already used in (\ref{3899}) and (\ref{3999}) to estimate $q^*_{u,\tau}(z_u)$ and $\alpha_i(\tau)$. Assume that $Q_{y}(\tau |z,\alpha)$ is $m$ times ($m\geq 2$) continuously differentiable in neighbourhood of $z\in R^{2}$, this will allow us to apply the local quantile regression of Honda (2000). By Taylor expansion for multivariable function, we have
+\begin{align}
+q(Z_1(ij),Z_2(ij))&=q(z_1,z_2)+\left[(Z_1(ij)-z_1) {\partial \over \partial z_1} + (Z_2(ij)-z_2){\partial \over \partial z_2} \right]^{(1)} q(z_1,z_2) \nonumber\\
+&+\left[(Z_1(ij)-z_1) {\partial \over \partial z_1} + (Z_2(ij)-z_2){\partial \over \partial z_2} \right]^{(2)} q(z_1,z_2)+\dots, \nonumber
+\end{align}
+where the $m-$order mixed partial derivative can be further specified as follows,
+\begin{align}
+&\left[(Z_1(ij)-z_1) {\partial \over \partial z_1} + (Z_2(ij)-z_2){\partial \over \partial z_2} \right]^{(m)} q(z_1,z_2)\nonumber\\
+&=\sum_{s=0}^{m} C_m^s  {\partial^{\lambda} q(z_1,z_2)\over {\partial^s z_1 \partial^{m-s} z_2}} (Z_1(ij)-z_1)^s (Z_2(ij)-z_2)^{m-s}. \label{31098}
+\end{align}
+Taking into account the observations of $(Z_1(ij),Z_2(ij))$ in the neighbourhood $z=(z_1,z_2)$, we define the vector $\hat \theta_z$ minimizes
+\begin{equation}
+(Nh^2)^{-1} \sum_{i=1}^n \sum_{j=1}^{n_i} \rho_{\tau} \left( y_{ij}-\theta_z^\top V \left(  {{Z(ij)-z} \over h}\right)\right) L \left( { {z-Z(ij)} \over h}\right), \nonumber
+\end{equation}
+where $\rho_{\tau}=\rho_{\tau}(u)=|u|+(2\tau-1)u$, $V \left(  {{Z(ij)-z} \over h}\right)$ and $\theta_z$ are constructed from the elements $h^{-m} \prod (Z_1(ij)-z_1)^s (Z_2(ij)-z_2)^{m-s}$ and $h^{-m} {\partial^{\lambda} q(z_1,z_2)/ {\partial^s z_1 \partial^{m-s} z_2}}$ with $m\leq p-1$, $L(\cdot)$ is a kernel function with $h$ to be a bandwidth. Then, $\hat Q_{y}(\tau |z,\alpha)$ can be defined by  
+\begin{equation}
+\hat Q_{y}(\tau |z,\alpha)=e_1^\top \hat \theta_z, \label{3409}
+\end{equation}
+where $e_1$ is a $p-$-dimensional unit vector with the first element $1$ and all other elements $0$.
+
+%%%%%%%%%%%%%%%%%%
+\vskip3mm
+\noindent{\bf Remark: 3}  An estimator of $q_{u,\tau}^{'}(z_u)$ of the first-oder partial deriative of $q(z_1,z_2)$  can be defined as below:
+\begin{equation}
+\hat q^{'}_{u,\tau}(z_u)={1 \over {Nh_1} }\sum_{i=1}^n \sum_{j=1}^{n_i} K\left( { {z_u-Z_u(ij)} \over h_1 }\right) {\hat f_w(W_u(ij) \over \hat f(Z(ij)) }  \hat Q_{y_{ij}}^{(1)}(\tau |Z({ij}),\alpha), \label{399900}
+\end{equation}
+where $\hat Q_{y_{ij}}^{(1)}(\tau |z({ij}),\alpha)$ is an estimator of the first-oder partial deriative of $q(z_1,z_2)$ with respective to $z_u$ (u=1,2), which is a component of an estimator of $\hat \theta_{z}$. Obsviously, (\ref{399900}) follows from that fact that $E\left[ \Phi(Z_u,W_u) Q^{(1)}_{y}(\tau |Z(ij),\alpha)|Z_u=z_u\right] = q^{'}_{u,\tau}(z_u), u=1,2.$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip5mm
+\subsection{Iterative algorithm for estimating parameter}
+
+We note from (\ref{323}) that the estimator of parameter $\beta$ can be obtained by using the clssic two-step estimation method for single-index model. For unknown function $g(\cdot)$ , the $\tau^{th}$ conditional quantile at $X_{ij}^{\top}\beta$ can be approximated linearly by
+\begin{equation}
+g(X_{ij}^\top \beta)\approx g(u)+g^{'}(u) (X_{ij}^\top \beta-u), \label{3119}
+\end{equation}
+where $X_{ij}^\top\beta$ close to $u$. Given the estimators of $g(\cdot)$, $g^{'}(\cdot)$, $f(\cdot)$ and $\alpha_i$, following (\ref{323}), we can empoly the local linear regression technique to estimate the parameter $\beta$ by minimizing
+\begin{equation}
+\sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left( Y_{ij}-g(u)-g^{'}(u) (X_{ij}^\top \beta-u)-f(t_{ij})-\alpha_i \right) w_{ij0}, \label{352}
+\end{equation}
+where $w_{ij0}=w_{h_2}(X_{ij}^\top \beta-u)$ is non-negative weights with $\sum_{i=1}^n \sum_{j=1}^{n_i} w_{ij0}=1$,   $w_{h_2}(\cdot)=w(\cdot/h_2)/{h_2}$ is a one-dimensional continuous symmetric kernel density function with bandwidth $h_2$. By averaging (\ref{352}) over $u_{ls}=X_{ls}^\top \beta$, we can get an empirical approximation as below
+\begin{equation}
+ \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left(  Y_{ij}-g(X_{ls}^\top \beta)-g^{'}(X_{ls}^\top \beta) (X_{ij}^\top \beta-X_{ls}^\top \beta)-f(t_{ij})-\alpha_i \right)  w_{ij,ls}, \label{36}
+\end{equation}
+ with
+\begin{equation}
+w_{ij,ls}={ w_{h_2}(X_{ij}^\top\beta-X_{ls}^\top\beta) \over {\sum_{l_1=1}^n \sum_{s_1=1}^{n_i} w_{h_2} (X_{l_1s_1 }^\top\beta -X_{ls}^\top\beta) }  }.
+\end{equation}
+The quantile regression estimators of $\beta$ can be then given by
+\begin{equation}
+{ \hbox{arg min} \atop {\beta \atop  ||\beta||=1, \beta_1>0} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left(Y_{ij}-g(X_{ls}^\top \beta)-g^{'}(X_{ls}^\top \beta) (X_{ij}^\top \beta-X_{ls}^\top \beta)-f(t_{ij})-\alpha_i \right)  w_{ij,ls}\nonumber % \label{38}
+\end{equation}
+with $g(\cdot),g^{'}(\cdot), f(\cdot)$ and $\alpha_i$ replaced by their consistent estimators defined in subsection 3.1.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip3mm
+
+The above quantile regression procedure is referred to be the minimizing average check loss estimation (MACLE) in Wu {\it et al.} (2010), which can be regarded as parallel to the minimizing average variance estimation (MAVE) method in mean regression of partially linear single-index (PLSIM) model (Xia and Hardle, 2006). In practice, the following computational procedure can be applied to obtain the estimators by iteratively solving two simplicity problems, one for nonparametric components and the other is for parameters, respetively.
+
+{\noindent{\bf  Step 1:} Standarded the ``initial value" of $\beta^{(1)}$ such that $||\beta^{(1)}||=1$ and $\beta^{(1)}>0$, that is, $\beta^{(1)}=\hbox{sign}(\beta^{(1)}_1)\beta^{(1)}/ ||\beta^{(1)}||$ with $\hbox{sign}(\beta^{(1)}_1)$ to be the first component of $\beta^{(1)}$. Then the estimators of $g(X_{ls}^\top\beta^{(1)}), g^{'}(X_{ls}^\top\beta^{(1)}), f(t_{ls})$ and $\alpha$ can be obtained from the resluts of Subsection 3.1.
+
+{\noindent{\bf  Step 2:} Given their estimators of $g(X_{ls}^\top\beta^{(1)}), g^{'}(X_{ls}^\top\beta^{(1)}), f(t_{ls})$ and $\alpha$, the estimators $\hat\beta$ can be obtained by 
+\begin{equation}
+{ \hbox{arg min} \atop {\beta \atop  ||\beta||=1,\beta_1>0} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left(Y_{ij}-g(X_{ls}^\top \beta^{(1)})-g^{'}(X_{ls}^\top \beta^{(1)}) (X_{ij}^\top \beta-X_{ls}^\top \beta)-f(t_{ij})-\alpha_i \right)  w_{ij,ls}\nonumber % \label{38}
+\end{equation}
+
+{\noindent{\bf  Step 3:} Repeat Step 1 and Step 2 untill convergence, the estimators $\beta(\tau)$ from the final procedure are also denoted by $\hat\beta$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The estimation of the nonparametric components in the step 1 is refrred {\it modified average quantile estimator} in Cheng {\it et al.} (2011), and it also shows that it estimates the additive components can attain a one-dimensional non-parametric optimal rate regardless of the dimensional number of the covariates. However, the asymptotic variance of the estimator has the second term $\Gamma_{2,\tau}(z_u)$ (see Theorem \ref{3721} below). We can also refine this estimator by using {\it oracle efficient estimnator} of Cheng {\it et al. } (2011), of which has the same variance as it would have if the other additive components were known. We will give the oracle efficient estimator for the nonparametric components. Define
+\begin{equation}
+\hat{Q}^*_{y}(\tau|Z_u,\alpha)=\hat q^*_{s,\tau}(z_s),
+\end{equation}
+where $u,s=1,2$ with $u\not=s$, and $\hat q^*_{s,\tau}(z_s)$ given in (\ref{3999}). Also assume that
+\begin{equation}
+Y_{ij}^*=Y_{ij}-\hat{\alpha}_i(\tau)-\hat{Q}^*_{y_{ij}}(\tau|Z_{u}(ij),\alpha),
+\end{equation}
+where $\hat{\alpha}_i(\tau)$ is defined in (\ref{3899}). We can hence then apply local linear smoothing to define the orcale efficient estimator as follows
+\begin{equation}
+\hat q^e_{u,\tau}(z_u)=e^\top_1 \hat \theta^e_{z}  \label{31890}
+\end{equation}
+with $\hat \theta^e_{z}$ to be obtained from an estimator by minizing the folowing
+\begin{equation}
+(Nh_e^2)^{-1} \sum_{i=1}^n \sum_{j=1}^{n_i} \rho_{\tau} \left( y^*_{ij}-{\theta^e_z}^\top V_e \left(  {{Z(ij)-z} \over h_e}\right)\right) L_e \left( { {z-Z(ij)} \over h_e}\right), \nonumber
+\end{equation}
+where $V_e(t)$ is a $p-$dimensional vector with its $j^th$ element to be $t^{j-1}$, and $L_e(\cdot)$ is a kernel function with $h_e$ be the bandwidth.
+
+Upon getting the oracle efficient estimators of the nonparametric components using the above method, we then propose the iterative algorithm to estimating parameter $\beta$, but with the modified quantile estimator defined in subsection 3.1 with the orcale effeicient estimators given by (\ref{31890}).
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+\vskip 5mm
+\noindent{\bf Remark: 4} We can consider an alternative as follows. $Q_{y}(\tau |z,\alpha)=\alpha_i+q_1(z_1)+q_2(z_2)$, by Taylor expansion of $q_1(z)$ we have
+\begin{equation}
+Q_{y_{ij}}(\tau |Z(ij),\alpha)\approx \left( \alpha_i+q_1(z_1)+q_1^{'}(z_1)(Z_1(ij)-z_1)+q_2(z_2) \right) w_{ij},
+\end{equation}
+by (\ref{349}) we have 
+\begin{equation}
+E\left[ \Phi(Z_1,W_1) Q_{y}(\tau |Z,\alpha)|Z_1=z_1\right]\buildrel def \over = q^*_{1,\tau}(z_1)=\alpha_i(\tau)+q_{1,\tau}(z_1)+q^{'}_{1,\tau}(z_1)(E(Z_1(ij)-z_1). 
+\end{equation}
+Then we can obtained the estimators of $q_{1,\tau}(z_1)$ and $q^{'}_{1,\tau}(z_1)$ as done in subsection 3.1 provided that $\alpha_i$ is known (since we can not assume simultaneously $E[q_1(Z_i)]=0$ and $E[q_1^{'}(Z_1)]=0$). However, an estimator of $\alpha_i$ can be also given in the first step, that is, $(\alpha^\top,\beta)^\top$ can be obtained simultaneously through the local linear regression step. The difference between this method and the proposed in Subsection 3.2 is the parametric or nonparametric approach to estimate the fixed effect $\alpha$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip5mm
+\subsection{Asymptotic properties of estimators}
+
+The following will present the asymptotic properties of the estimators for the parametric and nonparametric components, respecitively. Conditional on $Z=z$, the density function and cumulative distribution function of $Y$ are denoted by $f_Y(y|z )$ and $F_Y(y|z)$. Assume $f_{u}(z_u)$ to be the marginal density function of $Z_u$ and $d(y|z)$ to be the conditional density function of $\varepsilon_{\tau}$ given $Z=z$. Defined
+\begin{equation}
+\mu_j=\int \mu^j K(u)du, \quad \nu_j=\int \mu^j K^2(u)du, \quad j=0,1,2,\dots,
+\end{equation}
+where $K(\cdot)$ is a symmetric kernel density function. Then, we can established the following asymptotic properties for parametric part:
+\begin{theorem}
+\label{3135}
+Provided that the conditions $A.1-A.3$, $A.6-A.7$ and $(v)$ of $A.5$ given in Appendix holds, we have
+\begin{equation}
+\sqrt{n}\left(\hat\beta-\beta(\tau)\right)  \buildrel D \over\rightarrow N\left(0, \tau(1-\tau) {\cal D}_1^{-1} {\cal D}_0 {\cal D}_1^{-1}\right),\label{315}
+\end{equation}
+where $\buildrel D \over\rightarrow$ present convergence in distribution, ${\cal D}_0=E[{\cal D}]$, ${\cal D}_1=E\left[f_Y(q_{\tau}(X,t)|X^\top\beta(\tau)){\cal D}\right]$, ${\cal D}=\left[ g^{'}(X^\top\beta(\tau))\right]^2 \tilde X \tilde X^\top $, $\tilde X=X-E[X|X^\top \beta(\tau)]$.
+\end{theorem}
+
+The final estimators of the nonparametric components is obtained from step 1 of Subsection 3.2 and can be efficient if treat the $\beta$ is known or replaced by a consistent estimnator (Wu {\it et al.}, 2010), which also have been proved by the above Theorem. The asymptotic properties of the nonparametric parts can be given below:
+\begin{theorem}
+ \label{37218}
+Suppose that $u$ is an interior point of $f_{u}(z_u)$ for $u=1,2$, under the regularity conditions $A.1-A.5$ (except for $(v)$ of $A_5$), we also have
+\begin{equation}
+\sqrt{nh_1}\left\{ \hat{q}_i(z_u,h_1,\hat{\beta})-q_i(z_u)-{1\over 2} q_i^{''}(z_u)\mu_2 h_1^2\right\} \buildrel D \over\rightarrow N\left(0,\Gamma_{\tau}(z_u) \right) \label{32098}
+\end{equation}
+\end{theorem}
+ where $\Gamma_{\tau}(z_u)=\Gamma_{1,\tau}(z_u)+\Gamma_{2,\tau}(z_u)$ with $\Gamma_{1,\tau}(z_u)$ and $\Gamma_{2,\tau}(z_u)$ are given below:
+\begin{equation}
+\Gamma_{1,\tau}(z_u)={\tau(1-\tau) \nu_2 \over { f_{u}(z_u)} } E\left( {\Phi^2(Z) \over d^2(0|Z) }|Z_u=z_u\right) 
+\end{equation}
+and
+\begin{equation}
+\Gamma_{2,\tau}(z_u)={\nu_2 \over {f_{u}(z_u) } }E\left( {\Phi^2(Z) Q_{y}(\tau|Z,\alpha) }|Z_u=z_u\right)
+\end{equation}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip3mm
+
+\noindent{\bf Remark 5:} Bandwidth selection is always important in local reression and likelihood methods. In theorem, the optimal bandwidth could be attained by minimizing the asymptotic mean squared error (AMSE) from Theorem \ref{37218} when the sample size is large, that is
+\begin{equation}
+h_1^{opt}=\left( { {2  {\Gamma^{1/2}_{\tau}(z_u)} } \over {q_{u,\tau}(z_u) \mu_2 }  }\right)^{2/5} n^{-1/5}. \label{3129}
+\end{equation}
+However, the optimal bandwidth can not be getten directly due to serval unknown
+values, such as the index $Z$ which may includes unkouwn parameter $\beta$, the $g(\cdot)$, $f(\cdot)$ and the conditional quantile distribution function of $Y$. Following the argument of Yu and Jones (1998), we adapte the following rule-of-thumb bandwidth $h_{\tau}$ in $w_{ij,ls}$ of step 2 for estimating $\beta$:
+\begin{equation}
+h_{\tau}=h_m \left\{ \tau(1-\tau)/\phi(\Phi^{-1}(\tau)^2\right\}^{1/5},  \label{318}
+\end{equation}
+where $\phi(\cdot)$ and $\Phi(\cdot)$ are the density funtion and accumulative distribution function of the standard normallity, respectively. $h_m$ is the optimal bandwidth used in mean regression which can be obtained by the plug-in-method (see Ruppert {\it et al.}, 1995). The detail discussion of this approximation can be found in Yu and Jones (1998).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{theorem}
+\label{32876}
+Under the conditions of Theorem \ref{37218}, that is, conditions $A.1-A.5$ (except for $(v)$ of $A_5$), we have the asymptotic results of $\hat{\alpha}$ defined in (\ref{3899}):
+\begin{equation}
+\hat{\alpha}_i-\alpha_i=o_p\left(n^{-2/5}\right), \label{32599}
+\end{equation}
+\end{theorem}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+
+\section{Variable Selection for QR of PNSIM  \label{section4}}
+
+
+%\setcounter{equation}{0} 
+
+%\Subsection{Local Estimating equation}
+
+
+In this Subsection, we apply the variable selection method to the setting of quantile regression model with single-index and nonparametric components, in which the number of variaables in single-index model is very large, but the number of significant variables is small relative to $n$. This motivates us to employ the variable selection in QR of PNSIM. 
+
+In this paper, we adopt the adaptive lasso penalized of Zou (2006). Theorem (\ref{3135}) implies that the estimator $\hat \beta$ is $\sqrt{n}-$ consistent, we can then use $\hat\beta$ to construct the adatively weighted lasso penalized objective function as follows
+\begin{align}
+G_n(\beta)  &=\sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left(Y_{ij}-g(X_{ls}^\top \hat\beta)-g^{'}(X_{ls}^\top\hat \beta) (X_{ij}^\top \beta-X_{ls}^\top \beta)-f(t_{ij})-\alpha_i \right)  w_{ij,ls} \nonumber\\
+&+ \lambda \sum_{j=1}^p { |\beta_m| \over {|\hat \beta_m|^2} }.   \label{4291}
+\end{align}
+For the given tuning parameter $\lambda$, we can get the penalized estimators by minizing $G_n(\beta)$ with respective to $\beta$ under the constraint condition of 
+$||\beta||=1$ and the first nonzero element of $\beta$ is positive. We denote the estimator from the above by $\hat\beta^{\lambda}$, which will be used to discuss its asymptotic properties below. For selecting the tuning parameter $\lambda$, we follow the idea of Fan and Li (2004) and set $\lambda=\lambda_1 \hbox{SE}(X^\top\hat\beta)$ with the other tuning parameter $\lambda_1$ to be chosen optimally by BIC criteria defined in below, where $\hbox{SE}(X^\top\hat\beta)$ of the standard errors of the unpenalized estimator of $\beta$. The BIC criteria of Wang and Leng (2007) is given by
+\begin{equation}
+\hbox{BIC} (\lambda_1)=\log P_{\tau}(\lambda_1) + \log (n)/ n\hbox{DF}_{\lambda_1}, \label{4309}
+\end{equation}
+where $ P_{\tau}(\lambda_1)=\sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left(Y_{ij}-\hat g(X_{ls}^\top \hat\beta^{\lambda})-\hat f(t_{ij})-\hat\alpha_i \right)  w_{ij,ls} $ with $\hat \beta^{\lambda}$ to be an estimator from (\ref{4291}). $\hbox{DF}_{\lambda_1}$ is the number of nonzero coefficient of $\hat\beta^{\lambda}$. Then, the optimal tuning parameter is defined by $\hat{\lambda}_1=\hbox{argmin}_{\lambda_1} \hbox{BIC}(\lambda_1)$.
+
+The following computational procedure can be applied to proceed the variable selection of the parameter $\beta$ by iteratively solving two simplicity problems.
+
+{\noindent{\bf  Step 1:} Standarded the ``initial value" of $\hat\beta$ such that $||\hat\beta||=1$ and $\hat\beta>0$, that is, $\hat\beta=\hbox{sign}(\hat\beta_1)\hat\beta/ ||\hat\beta||$ with $\hbox{sign}(\hat\beta_1)$ to be the first component of $\hat\beta$. Then the estimators of $g(X_{ls}^\top\hat\beta), g^{'}(X_{ls}^\top\hat\beta), f(t_{ls})$ and $\alpha$ can be obtained from the resluts of Subsection 3.1.
+
+{\noindent{\bf  Step 2:} Given their estimators of $g(X_{ls}^\top\hat\beta), g^{'}(X_{ls}^\top\hat\beta), f(t_{ls})$ and $\alpha$, the estimators $\hat\beta^{\lambda}$ can be obtained by 
+the penalized likelihood function defined in (\ref{4291}).
+
+{\noindent{\bf  Step 3:} Repeat Step 1 and Step 2 untill convergence, the estimators $\beta(\tau)$ from the final procedure are also denoted by $\hat\beta^{\lambda}$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Let ${\cal A}=\{j: \beta_j\not=0\}$, we also assume that the correct model has regression coefficient $\beta(1,\tau)\in R^{p_0}$ to be nonzero components of $\beta(\tau)$, and $\beta(2,\tau) \in R^{p-p_0}$ to be zeros. It imples that ${\cal A}=\{ 1, 2, \dots, p_0 \}$, we define $X^{1}$ in such way that they consist of the first $p_0$ elements of $X$, and let $\tilde X^{1}=X^{1}-E[ X^{1}|{X^1}^\top \beta(1,\tau)$. Now we give the oracle properties of the estimator $\hat \beta^{\lambda}$ from (\ref{4291}). 
+
+\begin{theorem}
+(Oracle properties) Under the reguarity $A.1-A.8$ in Appendix, if $\lambda/\sqrt{n}\rightarrow 0$, then the adaptive lasso penalized estimator $\hat \beta^{\lambda}$
+must satisfy
+
+1. Consitency in selection: $Pr\left( \{ j: \hat\beta^{\lambda}_j \not=0\}={\cal A}\right)\rightarrow 1.$
+
+2. Asymptotic normality: $\sqrt{n} \left( \hat \beta^{1,\lambda}-\beta^{1,\lambda}\right) \buildrel D \over\rightarrow N\left(0, \tau(1-\tau), {\cal D}_{1*}^{-1} {\cal D}_{0*} {\cal D}_{1*}^{-1}\right).$
+
+${\cal D}_{1*}=E[f_Y(0|{X^1}^\top \beta(1,\tau) {\cal D}_{*}]$, ${\cal D}_{*}=\left[g^{'}( {X^1}^\top\beta(1,\tau)\right]^2 (\tilde X^1) {(\tilde X^1)}^\top$, and ${\cal D}_{0*}=E[ {\cal D}_*]$.
+\end{theorem}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Simulation Studies\label{section5}}
+%\setcounter{equation}{0} 
+
+
+In this section, we present two examples in simulation studies to assess the finite sample performance of the proposed model and method in this paper.{
+
+\vskip3mm
+
+\noindent {\bf Example 1}: In this example, there are 1000 datasets generated from it, each consisting of $n=200,400$ subjects and $5$ observations with each subject. We assume that the sample from the model
+\begin{equation}
+y_{ij}=\exp(X_{ij}^\top \beta) -e^{1/2} + \sin(2\pi t_{ij}) + \alpha_i + \epsilon_{ij}
+\end{equation}
+where $X_{ij}$ is from independent standard normal $N(0,1)$, and $\beta=(1/\sqrt{2}, 0, 1/\sqrt{2},0,0,0,0,0)^\top \in R^8$,  $t_{ij}$ is independently generated from a uniform $[0,1]$. This implies that $E[ g(X^\top\beta)]=E[\exp(X^\top \beta) -e^{1/2}]=0$ and $E[f(t)]=E[\sin (2\pi t)]=0$. The fixed effect $\alpha_i$, is generated as $\alpha_i=v_i+ {1\over N} \sum_{i=1}^n \sum_{j=1}^{n_i} ( X_{ij}+t_{ij}) $ with $v_i$ from $N(0,1)$. The error $\epsilon_{ij}$ is independent from $N(0,1)$. We also assume that $(X,t)$ is independent of $\epsilon$. The simulation results are displayed by the following:
+
+\begin{itemize}
+
+\item A) Figure 1 shows the estimated $g(\cdot)$ and $f(t)$ through quantile regression with $\tau=0.25, 0.5$ and $0.75$, respectively. And also, the confidence intervals of the estimated nonparametric components are listed in Figure at the $95\%$ per cent level. The bias and standard deviation (Std) of the estimated $\beta$ are given in Table 1 as well. 
+
+\item B) We also conducted the variable selection by adaptive lasso method for each $\tau$, the results over 250 simulations are summaried in Table 2. The results are reported by
+
+\noindent (i) The median relative model error, which is labeled by $MRME(\hat\beta)=(\hat\beta-\beta)^\top \Sigma (\hat\beta-\beta)$, where $\Sigma$ is the
+variance/covariance matrix of the regressors.
+
+\noindent (ii) The average number of the true zero coefficients of $\beta$ that are correctedly set to zero, which is denotaed by $C(\beta)$.
+
+\noindent (iii) The average number of the true nonzero coefficients of $\beta$ that are incorrectedly set to zero, which is given by $IC(\beta)$.
+
+\noindent (iv) The proportion of trials excluding any nonzero coefficient in 250 replications, denoted by $U-\hbox{fit}$.
+
+\noindent (v) The probability of trials selection the exact subset model (correct-fit) and the probability of trial including all the variables (over-fit) are given in Tables, they are labeled by $C-\hbox{fit}$ and $O-\hbox{fit}$, respectively.
+ 
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%3){\bf  For real data analyais, we should listed the estimated coefficient $\hat\beta_i$ (for $x_i$) with its $95\%$ confindence interval, but the Figure should be given by different $\tau$, such as $\tau=0.2, 0.4, 0.6,0.8$, please refer to the context of page 17 of the book of Koenker (2013). }  In which, $Y-$ axis is the values of $\hat\beta(\tau)$, and the $X-$ axis is the quantle values $\tau=0.2, 0.4, 0.6,0.8$. In their paper, a linear model is proposed, then we have $Y_i=X_{i1}\beta_1+ \dots + X_{id}\beta_d$, if $X_{ik}=0,1$, we have $Y(X_{ik})=X_{ik}\hat\beta(\tau)=\hat\beta(\tau)$, that is, the $Y-$axis is the $Y$ value (weights of the babies). For our setting, we have a monotone function of $g(\dot)$, if $X_{ik}=1$, the $Y$ value is proportional to $\hat\beta(\tau)$, we can also give some similar explanations. However, if the estimated curve $\hat g(\cdot)$ is not monotone, we can also do it in each piecewise monotone interval.
+
+
+%4) {\bf For real data, we can also refer to De Gooijer and Zerom (2003), page 142, Figure 3 and its explanation in Section 5.1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf Example 2}: In this simulation, there are 1000 datasets generated from model (\ref{5324}), each consisting of $n=200,400$ subjects and $5$ observations with each subject. We assume that the sample from the model
+\begin{equation}
+y_{ij}=X_{ij}^\top \beta + \sin(2\pi t_{ij}) + \alpha_i + \epsilon_{ij}, \label{5324}
+\end{equation}
+we keep all the other assumptions are the same in Example 1, but the covariates $X_{ij}$ and $t_{ij}$ are assumed to be corralated. Let $\tilde W=(X^\top t)^\top \in R^{p+1}$ with $\tilde W \sim N({\bf 0},\Sigma), \Sigma(j,j)=1, \Sigma(i,k)=\gamma$ if $i\not=k$. We consider the cases of $\gamma=0.2$ and 0.8 with low and high correlation between the covariates. Then,  it's easily found that $E[g(X^\top\beta)]=0$ and $E[f(t)]=0$ with a standard normal sample $\tilde W$ sincer $\sin(2\pi t)$ is a odd function of $t$. All the questions of A) and B) are reported Figure 2 and Tables 3-4 as well.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In the simulation studies of step 1 of Subsection 3.1, we use the bandwidth values just as done in De Gooijer and Zerom (2003). We consider a varying bandwidth $h_1$ for different covariates. For the covariate $X$ and $t$, we take $h_1=3s_1 N^{-1/5}$ and $h_1=s_2 N^{-1/5}$, respectively, where $s_1$ and $s_2$ are the sample standard deviations of the covariates $X$ and $t$. We also choose $h_1$ and $h_e$ are the same as $h$ for different covariates. For estimation of $\beta$, we need a bandwidth $h_2$ in the weight function $w_{ij,ls}$, we follow the idea of (\ref{318}) to choose this bandwidth in the simulation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 3mm
+
+\noindent {\bf Simulation results}: We can see from the above simulation results of Tables 1,3 and Figure 1-2 that the estimated parameters and the nonparametric components perfrom well when the parameters varying with $\tau$. The estimated parameters are centered around the ture values, and the estinated nonparametric components is close to the true curves. These estimnators are also robust even if for the correlated covariates.  From Tables 2,4, we can also see that the variable selection procedure can efficiently choose the true submodel. ........
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\vskip4mm
+\begin{center}
+{\bf Table 1. Simulation results of the estimated parameters for Example 1}
+\vskip3mm
+\begin{tabular}{cccccccccc}
+  \hline\hline  
+ $\tau$  &Bias and Std   &$\beta_1$ &$\beta_2$ &$\beta_3$ &$\beta_4$  &$\beta_5$ &$\beta_6$ &$\beta_7$ &$\beta_8$ \\
+  \hline
+ n=200   \\
+ 0.25 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.50 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.75 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+ 
+n=400   \\
+ 0.25 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.50 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.75 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+\hline
+\end{tabular}
+\end{center}
+\vskip10mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip4mm
+\begin{center}
+{\bf Table 2. Variable section results for Example 1}
+\vskip3mm
+\begin{tabular}{cccccccccc}
+  \hline\hline  
+ $\tau$  &$MRME(\beta)$   &$C(\beta)$ &$IC(\beta)$ &U-fit &O-fit  &C-fit  \\
+  \hline
+ n=200   \\
+ 0.25 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.50 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.75 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\     
+n=400   \\
+ 0.25 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.50 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.75 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\   
+\hline
+\end{tabular}
+\end{center}
+\vskip10mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\vskip4mm
+\begin{center}
+{\bf Table 3. Simulation results of the estimated parameters for Example 2}
+\vskip3mm
+\begin{tabular}{cccccccccc}
+  \hline\hline  
+ $\tau$  &Bias and Std   &$\beta_1$ &$\beta_2$ &$\beta_3$ &$\beta_4$  &$\beta_5$ &$\beta_6$ &$\beta_7$ &$\beta_8$ \\
+  \hline
+ n=200   \\
+ 0.25 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.50 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.75 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+ 
+n=400   \\
+ 0.25 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.50 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+0.75 &Bias    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121  \\
+      &Std     &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276 &0.862 &0.121\\
+\hline
+\end{tabular}
+\end{center}
+\vskip10mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip4mm
+\begin{center}
+{\bf Table 4. Variable section results for Example 2}
+\vskip3mm
+\begin{tabular}{cccccccccc}
+  \hline\hline  
+ $\tau$  &$MRME(\beta)$   &$C(\beta)$ &$IC(\beta)$ &U-fit &O-fit  &C-fit  \\
+  \hline
+ n=200   \\
+ 0.25 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.50 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.75 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\     
+n=400   \\
+ 0.25 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.50 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\      
+ 0.75 &0.582    &0.582 &0.285 & 0.574 &0.138 &0.879 &0.276    \\   
+\hline
+\end{tabular}
+\end{center}
+\vskip10mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+ {\bf Figures 1} : Estimated nonparametric components with different $\tau$ for Example 1.
+\vskip5mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 5.5cm
+\hskip0mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip5mm{{\bf } Estimated $g(x)$ with $\tau=0.2$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip5mm{{\bf } Estimated $f(x)$ with $\tau=0.2$}
+
+\vskip 6.2cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip0mm{{\bf} Estimated $g(x)$ with $\tau=0.5$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip5mm{{\bf} Estimated $f(x)$ with $\tau=0.5$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 6.5cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\vskip-7mm
+\vskip0mm{{\bf} Estimated $g(x)$ with $\tau=0.75$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip 6mm{{\bf} Estimated $f(x)$ with $\tau=0.75$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+ {\bf Figures 2} : Estimated nonparametric components with different $\tau$ for Example 2.
+\vskip5mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 5.5cm
+\hskip0mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip-0cm{{\bf} Estimated $g(x)$ with $\tau=0.2$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip-0cm{{\bf} Estimated $f(x)$ with $\tau=0.2$}
+
+\vskip 6.2cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip-0cm{{\bf } Estimated $g(x)$ with $\tau=0.5$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip-0cm{{\bf } Estimated $f(x)$ with $\tau=0.5$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 6.5cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip-7mm{{\bf } Estimated $g(x)$ with $\tau=0.75$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip 6mm{{\bf} Estimated $f(x)$ with $\tau=0.75$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\section{Application}
+
+In this Subsection, we will re-analyzed the data of elderly households from the MEPS 2010 Full Year Consolidated Data File of the Household Survy, the dataset include households in which every member was $65$ years of age or over in the survey year.  This data has been discussed by many authors including Chen {\it et al.} (2014) by using the partially linear marginal model with semiparametric covariance structure for correlated data. Chen {\it et al.} (2014) applied a subset of the full MEPS data by excluding the zero values (because very few elderly individuals would have zero medical expenditures) and endogeneity associated with choices os insurance (because Medicare eligibility stars at 65, except for those with end-stage renal disease or distribled). We also follow their idea and take this sample which includes 2139 individuals aged brtween 65 and 84 years within 1556 households to waive the erronously attributing age effects of individuals over 85 to those at 85, since the age in MEPS data is truncated if the age is beyond 85.  
+
+We apply the partially nonparametric single-index model to re-analyzed this subset of MEPS data, the most advantage of this model is that it can accommodate the high-dimensional covariates through single-index function and time-varying covariates by nonparametric component. The response varibale of model is annual medical costs in US dollars. We can see from the analysis of Chen {\it et al.} (2014) that medical costs are highly skewed to the right with an evident by a much larger mean (US $\$9235$) and small median (US $\$3955$). In the study sample, $41.1\%$ male in the observations have hospitalization experience and have $15.0\%$ mortality rate, $79.5\%$ white race have hospitalization experience and have $1.4\%$ mortality rate. For underlying disease(s) on his/her medical costs, we also consider five disease categories: heart and blood vessel disease ($82.7\%$), respiratory disease ($16.9\%$), body movement disoder ($76.6\%$),cancer ($28.9\%$),
+diabetes ($21.9\%$). Then we consider the following 10 covariates: white ($X_1$), male $(X_2$), death $(X_3)$, hospitalization ($X_4$), hbv disease ($X_5$), respiration disease ($X_6$), body movement disorder $(X_7)$, cancer ($X_8$), diabetes $(X_9)$, family $(X_{10}$). In this dataset, we take the response variable $Y=0$ if the individual have zero value of the medical cost, which has a small protion $3.6\%$ of subjects. The continuous covariate $t$ in $f(t)$ is age. In order to get a comphensive analysis and find singificant variables, in this paper we will study the dataset by using partially nonlinear single-index model to re-analyz the dataset. 
+
+
+The estimated $\beta$ based on the variable selection method with different $\tau$ are displayed in Table 5. From Table 5, we can see that......
+
+The estimated nonparametric components $g(x)$ and $f(t)$ are given in Figure 3 for some different $\tau$, from Figure, we can see that.....
+
+To identify the effects of each covariate $\beta_j$ on the different amounts of the medical costs, we also give the estimated of $\beta$ in Figure 4 with different $\tau$, we can see from Figure 4 that .......
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vskip6mm
+\begin{center}
+{\bf Table 5. Variable selection for Medical Expenditure Pandel Survey data}
+\vskip3mm
+\begin{tabular}{cccccccccc}
+  \hline\hline  
+ Covariates \hskip 14mm  $\tau$  &0.1   &0.3   &0.5   &0.7  &0.9       \\
+  \hline
+
+White                    &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Male                     &0.582    &0.582 &0.285 & 0.574 &0.138        \\      
+Death                    &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Hospitalization          &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+HBV Disease              &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Respiraory Disease       &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Boyd Movement Disorder   &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Canccer                  &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Diabetes                 &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+Family                   &0.582    &0.582 &0.285 & 0.574 &0.138        \\
+\hline
+\end{tabular}
+\end{center}
+\vskip10mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+ {\bf Figures 3} : Estimated nonparametric components for MEPS data.
+\vskip5mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 5.5cm
+\hskip0mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip5mm{{\bf } Estimated $g(x)$ with $\tau=0.2$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip5mm{{\bf } Estimated $f(x)$ with $\tau=0.2$}
+
+\vskip 6.2cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip0mm{{\bf} Estimated $g(x)$ with $\tau=0.5$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip5mm{{\bf} Estimated $f(x)$ with $\tau=0.5$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 6.5cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip0mm{{\bf} Estimated $g(x)$ with $\tau=0.75$}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip 6mm{{\bf} Estimated $f(x)$ with $\tau=0.75$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+ {\bf Figures 4} : Estimated $\{\hat{\beta}_j(\tau), j=1,\dots, 10\}$ for MEPS data with different $\tau$.
+\vskip5mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 5.5cm
+\hskip0mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip+35mm{{\bf} White}
+\vskip-7mm
+\hskip 8cm \special{eps:CI-1.eps x=3in y=2.5in}  
+\hskip+37mm{{\bf } Male}
+
+\vskip 6.2cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip+37mm{{\bf} Death}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip+20mm{{\bf} Hospitalization}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 6.1cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip+30mm{{\bf } HBV Disease}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip+23mm{{ Respiraory Disease}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+ {\bf Figures 4} :  Continuous
+\vskip5mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip 5.5cm
+\hskip0mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip +20mm{{\bf} Boyd Movement Disorder}
+\vskip-7mm
+\hskip 8cm \special{eps:CI-1.eps x=3in y=2.5in}  
+\hskip+26mm{{\bf } Canccer}
+
+\vskip 6.2cm
+\hskip0.8mm
+\special{eps:CI-1.eps x=3in y=2.5in} 
+\hskip+23mm{{\bf } Diabetes}
+\vskip-7mm
+\hskip 8cm \special{eps: CI-1.eps x=3in y=2.5in} 
+\hskip+26mm{{\bf } Family}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip5mm
+
+\section{Concluding Remarks \label{section6}}
+\setcounter{equation}{0} 
+
+In this paper we proposed a partially nonlinear single-index model, which can accommodate the high-dimensinal covariates in signle-index function, and also have the other nonparametric component for the time-varying covariates. In order to get a comphensive and robust estimator of the coefficients, a quantile regression is proposed to obtain their estimators of nonparametric and parametric parts, furthermore, the variable selection method is applied to idenify some significant factors.
+In both quantile regression and variable selction procedure, the two-step estimation method is used, the first is to estimate the nonparametric components by using the modified average quantile regression based on the given single-index parametetrs, and the second is to estimnate the single-index parameter by using local regression method with the nonparanmetric components replaced by their estimators from the first step. We also established the asympotitic properties of the estimators as well.
+
+Simulations are carried out to assess the proposed method in this paper, and the Medical Expenditure Panel Survey data are re-analyzed to demonstrate its effectiveness. The simulation results and the example of application show several advantages of the proposed method in the analysis of medical costs: (i) it has a high estimation efficiency for high-dimensional covariates through a single-index model; (ii) it's more flexiable by using the other nonparametric part for time-varying covariates; (iii) it has a strong ability to detect and identify covariate effects through the variable selction procedure; and (iv) we can get a comprehensive and robust estimation for the partially nonlinear model with quantile regression.
+
+The sufficient dimension reduction is another approache for high-dimensional covariates, it dosn't need any model assumption in dimension reduction. This is a very interest topic to be studied in the future.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\vskip5mm
+
+%\noindent{\bf Acknowledgments}
+
+%\noindent  We are grateful to Dr. Liping, Zhu at Shanghai University of Finance and Economics 
+%for carefully reading the manuscript and very useful suggestions for the simulation in Section 5.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\renewcommand{\baselinestretch}{1.00}
+
+\begin{thebibliography}{99}   
+{\small
+
+\baselineskip14pt
+
+%\bibitem{} National Institute for Health Care Management. Understanding U.S. health care spending: NICHM Foundation data brief July 2011, NIHCM Foundation, 2011. Available at http://nihcm.org/images/stories/NIHCM-CostBrief-Email.pdf [Accessed 1 May 2013].
+
+
+\bibitem {} {\small  Ai, C. R., You, J. H. and Zhou, Y. (2014). Estimation of fixed effects panel data partially linear additive regression models.. \textit{Econometrics Journal}, \text{17}, 83-106.}
+
+\bibitem {} {\small  Bang, H. and Tsiatis, A. A.  (2002). Median regression with censored cost data. \textit{Biometrics}, \text{58}, 643-649.}
+
+\bibitem {} {\small  Blough, D. K., Madden, C. W. and Hornbrook, M. C. (1999).  Modeling risk using generalized linear models. \textit{Journal of Health Economics}, \text{18}, 153每171.}
+
+\bibitem {} {\small  Castelli, C., Combescure, C., Foucher, Y. and Daures, J.P. (2007). Cost-effectiveness analysis in colorectal cancer using a semi-Markov model. \textit{Statistics in Medicine}, \text{26}, 5557-5571.}
+
+\bibitem {} {\small  Chen, J. S., Liu, L., Shih, Y-C. T., Zhang, D. W. and Severini, T.A. (2014). A flexible model for correlated medical costs with application to meidcal expenditure panel survey data. \textit{Statistics in Medicine}, \text{DOI 10. 1002/sim.0000}.}
+
+\bibitem {} {\small  Chen, J. S., Liu, L., Zhang,Daowen and Shih, Y-C. (2013). A flexible model for the mean and variable functions, with application to medical cost data. \textit{Statistics in Medicine},  \text{32}, 4306-4318.}
+
+\bibitem {} {\small  Chen, J. S., Kimb, I. Terrellb, G. R. and Liu, L. (2014).Generalised partial linear single-index mixed models for repeated measures
+data. \textit{Journal of Nonparametric Statistics}, \text{DOI: 10.1080/10485252.2014.891029}.}
+
+\bibitem {} {\small  Chen, J., Gao, J.T. and Li, D.G.  (2013).  Estimation in partially lLinear single-index panel data models with fixed effects. \textit{Journal of the American Statistical Association}, \text{http://dx.doi.org/10.1080/07350015.2013.775093}.}
+
+\bibitem {} {\small  Cheng, Y. B., Gooijer, J. D. and Zerom, D. (2011). Efficient estimation of an additive quantile regression model. \textit{Scandinaian Journal of Statistics},  \text{38}, 46-62.}
+
+\bibitem {} {\small  Dominici, F. and Zeger, S. L. (2005).  Smooth quantile ratio estimation with regression: estimating medical expenditures for smooking-attibutable disease. \textit{Biostatistics}, \text{6}, 505-519.}
+
+\bibitem {} {\small  Dominici, F. , Cope, L., Naiman, D. Q. and Zeger, S. L. (2005).  Smooth quantile ratio estimation. \textit{Biometrika}, \text{6}, 505-519.}
+
+\bibitem {} {\small  Duan, N. H. and Li, K. C. (1991). Slicing regression: A link-free regression method. \textit{The Annsls of Statistics}, \text{19}, 505-530.}
+
+\bibitem {} {\small  Fan, J. Q. and Li, R. Z. (2004). New estimation and model selection procedures for semiparametric modeling in longitudinal data analyais. \textit{Journal of the American Statistical Association},  \text{99}, 701-723.}
+
+\bibitem {} {\small  Fan, Y., Harlde, W., Wang, W. Zhu, L. (2013). Composite quantile regression for single-index model. In {\it Sonderforschungsbereich 649: Okonomisches Risko-(SFB 649 Papers)}. Humboldt-Universitat zu Berlin, Wirtschaftswissenschaftliche Fakultat.}
+
+\bibitem {} {\small  Fan, J. Q., Hardle, W. and Mammen, E. (1998).  Direct estimation of low-dimensional components in additive nodels. \textit{The Annals of Statistics}, \text{26}, 943-971.}
+
+\bibitem {} {\small  Gao, J. T and Liang, H. (1997).  Statistical inference in single-index and prtially nonlinear models. \textit{Annals of the Institute of Statistical Mathematics}, \text{49}, 493-517.}
+
+\bibitem {} {\small  Galvao, A. F., Lamarch, C. and Lima, L. R. (2013).  Estimation of censored quantile regression for panel data with fixed effects. \textit{Journal of the American Statistical Association}, \text{DOI:10.1080/01621459.2013.818002}.}
+
+\bibitem {} {\small  Gooijer, J. D. and Zerom, D. (2003). On additive conditional quantile with high-dimensional covariates. \textit{Journal of the American Statistical Association},  \text{98}, 135-146.}
+
+\bibitem {} {\small  Horowitz, J. (1998). Lecture Notes in Statistics. \textit{ Springer; New York: 1998. Semiparametric Methods in
+Econometrics}.}
+
+\bibitem {} {\small  Honda, T. (2000). Nonparametric estimation of a conditional quantile for mixting processes. \textit{Annals of the Institute of Statistical Mathematics}, \text{52}, 459-470.}
+
+\bibitem {} {\small  Hardle, W., Liang, H. and Gao,J. T. (2000). Partially linear models \textit{ Physica-Verlag, Heidelberg}.}
+
+\bibitem {} {\small  Hardle, W. (1990). Application nonparametric regression \textit{Combridge University Press, Boston}.}
+
+\bibitem {} {\small  Koenker, R. (2004).  Quantile analysis for longitudinal data. \textit{Journal of Multivariate Analysis}, \text{91}, 74-89.}
+
+\bibitem {} {\small  Lai, P., Li, G. R. and Lian, H. (2013). Semiparametric estimation of fixed effects panel data single-index model. . \textit{Statistics and Probability Letters}, \text{83}, 1595-1602.}
+
+\bibitem {} {\small  Li, T. Z. and Mei, C.L. (2013). Estimation and inference for varying coefficient patially nonlinear models. \textit{Journal of Statistical Planning and Inference}, \text{143}, 2023-2037.}
+
+\bibitem {} {\small  Li, R.Z. and Nie, L. (2007). A new estimation procedure for a partially nonlinear model via ＆a mixed-effects approach. \textit{The Canadian Journal of Statistics}, \text{35}, 399-411.}
+
+\bibitem {} {\small  Li, R. Z and Liu, N. (2008).  Efficient Statistical inference procedures for partially nonlinear models and their applications. \textit{Biometrics}, \text{64}, 904-911.}
+
+\bibitem {} {\small  Li, R. Z. and  Liang, H. (2008). Variable selection in semiparametric regression modeling. \textit{The Annsls of Statistics}, \text{36}, 261-286.}
+
+\bibitem {} {\small  Liu, L., Huang, X.L. and O'Quigley, J. (2008a). Analysis of longitudinal data in the presence of informative observational times and a Dependent Terminal Event, with application to medical cost data. \textit{Biometrics}, \text{64}, 950-958.}
+
+\bibitem {} {\small  Liu, L., Conawaya, M., Knausb, W.A. and Berginc, J. D. (2008b). A random effects four-part model, with application to correlated medical costs. \textit{Computational Statistics and Data Analysis}, \text{52}, 4458每4473.}
+
+\bibitem {} {\small  Liu, L. (2009). Joint modeling longitudinal semi-continuous data and survival, with application to longitudinal medical cost data. \textit{Statistics in Medicine}, \text{28}, 972-986.}
+
+\bibitem {} {\small  Lin, D.Y., Feuer, E.J., Etzioni, R.and Wax, Y.  (1997). Estimating medical costs from incomplete follow-up data. \textit{ Biometrics}, \text{ 53}, 419-434.}
+
+\bibitem {} {\small  Liu, L. (2009). Joint modeling longitudinal semi-continuous data and survival, with application to longitudinal medical cost data. \textit{Statistics in Medicine}, \text{28}, 972-986.}
+
+\bibitem {} {\small  Liang, H., Li, R. Z., Liu, X. and Tsai, C. L. (2010). Estimation and testing for partially linear single-index models. \textit{The Annsls of Statistics}, \text{38}, 3811-3836.}
+
+\bibitem {} {\small  Liang, H. (1995). Second-order asymptotic efficiency of PMLE in generalized linear models. \textit{Statistics and Probability Letters}, \text{24}, 271-279.}
+
+\bibitem {} {\small  Liang, H. and Wang, N. (2005). Partially linear single-index measurement error models. \textit{Statistica Sinica }, \text{15}, 99-116.}
+
+\bibitem {} {\small  Lamarch, C. (2013). Robust penalized quantile regression estimation for panel data. \textit{Journal of Economics}, \text{157}, 396-408.}
+
+\bibitem {} {\small  Lv, Y. Z., Zhang, R. Q., Zhao, W. H. and Liu, J. C. (2014). Quantile regression and variable selection of partial linear single-index model. \textit{Annals of the Institute of Statistical Mathematics}, DOI 10.1007/s10463-014-0457-x.}
+
+\bibitem {} {\small  Manning, W. G., Mullahy, J. (2001).  Estimating log models: to transform or not to transform?. \textit{Journal of Health Economics}, \text{20}, 461每494.}
+
+\bibitem {} {\small  Manning, W. G., Mullahy, J. (2005).  Generalized modeling approaches to risk adjustment of skewed outcomes data. \textit{Journal of Health Economics}, \text{24}, 465每488.}
+
+\bibitem {} {\small  Powell, J.L., Stock, J.H. and Stoker, T.M. (1989). Semiparametric estimation of index coefficient. \textit{Econometrica}, \text{51}, 1403-1430.}
+
+\bibitem{} Ruppert, D. and Sheather, S. J., Wand, M. P. (1995).  An effective bandwidth selector for loacl least squares regression.  {\it Journal of the American Statistical Association}, {\bf 90},  1257-1270.
+
+\bibitem {} {\small  Song, L. X., Zhao, Y. and Wang,X. G. (2010). Sieve least squares estimation for partially nonlinear models. \textit{Statistics and Probability Letters}, \text{80}, 1271-1283.}
+
+\bibitem{} Sun, L.Q., Song, X. Y., Zhou, J. and Liu, L. (2012). Joint Analysis of longitudinal data With informative observation times and a dependent tTerminal event. {\it Journal of the American Statistical Association}, {\bf 107},  688-700.
+
+\bibitem {} {\small  Tang, Y.L., Wang, H.X. and Zhu, Z.Y. (2013).  Variable selection in quantile varying coefficient models with longitudinal data. \textit{Coputational Statistics and Data Analysis}, \text{57}, 435-449.}
+
+\bibitem{} Wahba, G. (1990).  {\it Spline models for observational data}. SIAM, Philadelphia.
+
+\bibitem {} {\small  Wang, H.X. and Zhou, X.H. (2010).  Estimation of the retransformate conditional mean in health care cost studies. \textit{Biometrika}, \text{97}, 147-158.}
+
+\bibitem {} {\small  Wang, H.S. and Leng, C. L. (2007).  Unified LASSO estimation by least squares approximation. \textit{Journal of the American Statistical Association}, \text{102}, 1039-1048.}
+
+
+
+
+\bibitem {} {\small  Wu, T.Z., Yu, K. M. and Y. Y. (2010).  Single-index quantile regression. \textit{Journal of Multivariate Analysis}, \text{101}, 1607-1621.}
+
+\bibitem {} {\small  Xia, Y.C. and Hardle,W. (2006). Semiparametric estimation of partially linear single-index models. \textit{Journal of Multivariate Analysis}, \text{97}, 1162-1184.}
+
+\bibitem {} {\small  Xia, Y.C. and Harlde, W. (2006). Semi-parametric estimation of partially linear single-index models. \textit{Journal of Multivariate Analysis }, \text{97}, 1162-1184.}
+
+\bibitem {} {\small  Yu, K. M. and Lu, Z. D. (2004). Local linear additive quantile regression. \textit{The Scandinavian Journal of Statistics}, \text{31}, 333-346.}
+
+\bibitem{} Yu, K. and Jones, M. C.  (1998).  Local linear quantile regression.  {\it Journal of the American Statistical Association}, {\bf 93},  228-237.
+
+\bibitem {} {\small  Zeger, S. L. and Liang, K. Y. (1992). An overview of methods for the analysis of longitudinal. \textit{Statistics in Medicine}, \text{11}, 1825-1839.}
+
+\bibitem {} {\small  Zhao, X.B. and Zhou, X. (2014). Estimation of copula based models for lifetime medical costs. \textit{ Annals of the Institute of Statistical Mathematics}, \text{DOI 10. 1007/s10463-014-0477-6}.}
+
+\bibitem {} {\small  Zhao, X.Q., Deng, S. R., Liu, L. and Liu, L. (2014). Sieve estimation in semiparametric modeling of longitudinal data with informative observation times. \textit{Biostatistics}, \text{15}, 140-153.}
+
+\bibitem {} {\small  Zhao, X. B. and Zhou, X. (2012). (2012). Estimation of medical costs by copula models with dynamic change of health status. \textit{Insurance: Mathematics and Economics}, \text{51}, 480-491.}
+
+\bibitem {} {\small  Zhou, X. H. and Liang, H.  (2006). Semiparametric single-index two-part regression models. \textit{Coputational Statistics and Data Analysis}, \text{50}, 1378-1390.}
+
+\bibitem {} {\small  Zou,  H.   (2006). The adaptive lasso and its oracle properties. \textit{Journal of the American Statistical Association}, \text{101}, 1418-1429.}
+
+
+
+%\bibitem {} {\small  Liu, L., Wolfe, R. A. and Kalbfleisch, J. D.  (2007). A shared random effects model for censored medical costs and mortality. \textit{Statistics in Medicine}, \text{26}, 139-155.}
+
+
+%\bibitem {} {\small  Feng, S. Y. and Li, G. R.   (2014). Efficient statistical inference for partiall nonlinear errors-in-variates models. \textit{Acta Mathematica Sinica, English Series}, \text{30}, 1606-1620.}
+
+
+
+}
+\end{thebibliography}
+
+
+ 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\baselineskip22pt
+
+\noindent{\large\bf Appendix II: Proofs of Asymptotic Properties}
+\setcounter{equation}{0} 
+\vskip5mm
+
+We need the following regularity conditions to derive the asymptotic properties of the estimators in this paper.
+
+\noindent ${\bf A}_1:$ The additive function $g(x)$ and $f(t)$ are $p$ times ($p\geq 2$) continuously differentiable in the neighbourhood of $x,t\in R$. The full-dimensional conditional quantile $Q_{y}(x,t,\alpha)$ is also $p$ times continuously differentiable in the neighbourhood of $(x,t)\in R^2$. The density function of $(X,t)$ is bounded from above and has $\tilde p$ derivatives on their support set, where $\tilde p >2p/(p+1)$.
+
+\noindent ${\bf A}_2:$ The conditional probability density of $\varepsilon_{\tau}$ given $X=x$, say, $d(y|x)$, has the first continuous derivative with respect to the argument $y$ in the neighbourhood of $0$. 
+
+\noindent ${\bf A}_3:$ $K(\cdot)$ is a $pth$ order kernel function and satisfies $\int K(t_1)dt_1=1$, $\int t^j_1 K(t_1)dt_1=0$ for $j=1,\dots, p-1$ and $\int t^p_1 K(t_1)dt_1\not=0$. For $i=1,2$, $L_i(\cdot)$ is  $\tilde pth$ order kernel function and satisfies $\int L_i(s)ds=1$, $\int s^j L_i(s)ds=0$ for $j=1,\dots, \tilde p-1$ and $\int s^p L_i(s)dt_1\not=0$. $L(t)$ is a second-order kernel which has bounded and continuous partial derivatives of order $1$.
+
+
+\noindent ${\bf A}_4:$ (i) There exist two constant $\delta>2$ and $\gamma>0$ such that $\delta>\gamma+2$ and the function $E\left\{ \mid{ f_w(W_u) \over f(Z)} Q_y(\tau|Z,\alpha) \mid^{\delta} | Z_u=z_u^{'}\right\}$ is bounded in the neighbourhood of $z_u^{'}=z_u$. (ii) The mixing coefficients $\pi(i)=O(i^{-\theta})$ with $\theta>\max\left\{p+{4\over p}+6, { {2(p+1)\delta} \over {\delta-2}+1}\right\}$, and the $\pi(i)$ is defined in Cheng {\it et al.} (2011). 
+
+\noindent ${\bf A}_5:$  (i) The bandwidth satisfies that $n^{-\gamma/4} h_1^{(2+\gamma)/\delta-1-\gamma/4}=O(1)$ and $\lim \sup_n nh_1^{2p+1}<\infty$. (ii) Assume that tere exists a sequence of positive integers $s_n$ such that $s_n\rightarrow \infty, s_n=o((nh_1)^{1/2})$ and $(nh_1)^{1/2})\pi(s_n)\rightarrow 0$ as $n\rightarrow\infty$. (iii) For some sufficiently small constant $\epsilon>0$, $h=Cn^{-k}$ with constant $k$ satisfying $1/(2p+1)<k<\{2p+3-(2p+1)(1/\theta-2\epsilon)\}/\{6(2p+1)(1+2/3\theta-1/3\theta^2)\}$ and $h/h_1\rightarrow 0$. (iv) $h_1^{\theta(1-2/\delta)}h^{2/\delta-2}\rightarrow 0$, $nh^2(h_1h^2)^{3/\theta+\epsilon}\rightarrow \infty$. (v) The bandwidth $h_2$ satifies $h_2 \sim n^{-\tilde \delta}$ with $1/6 <\tilde \delta <1/4$.
+
+\noindent ${\bf A}_6:$ The conditional expectations $E\left[X|X^\top\beta=u\right]$, $E\left[XX^\top f_Y(q_{\tau}(X,t)|X^\top\beta) |X^\top\beta=u\right]$ are twice 
+differentiable with rspect to $u$.
+
+\noindent ${\bf A}_7:$ $E\left[ g^{'}(X^\top\beta(\tau))^2 [X-E(X)][X-E(X)]^\top\right]$ and $E\left[ g^{'}(X^\top\beta(\tau))^2 \tilde X \tilde X^\top\right]$ are 
+positive-definite matrix's, where $g^{'}(\cdot)$ is the first derivative of $g(\cdot)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The conditions ${\bf A_1}$ to ${\bf A_5}$ are used to show the asymptotic results of Theorems \ref{37218}, \ref{32876}, the condition ${\bf C6}$ of Cheng {\it et al.} (2011) has been included in codition ${\bf A_1}$ for the our setting with these two additive components. We also need the conditions to show Theorem \ref{3135}, wich is similar that of Lv {\it et al.} (2014), however, their conditions have also been included into conditions of ${\bf A}_1$ to ${\bf A}_3$, ${\bf A}_6$,  ${\bf A}_7$ and condition $(v)$ of ${\bf A}_5$ of the above.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip4mm
+
+
+\noindent{\bf Proof of Theorem 3.1}:
+\begin{proof} 
+The proof of this theorem is similar to that of Lv {\it et al.} (2014), but with the asymptotic presentations of $\hat g(X_{ls}^\top\tilde \beta)$, $\hat g^{'}(X_{ls}^\top\tilde \beta)$, $\hat f(t_{ls})$ and $\hat \alpha_i$ from the modified average quantile regression of Cheng {\it et al.} (2011) in Subsection 3.1 rather than from the mininmizing average check loss estimation of Lv {\it et al.} (2014), where $\tilde \beta$ is estimator of $\beta$ in iterative algorithm. And hence then, we only outline the proof of Theorem below.  
+
+
+From the second step we can know that $\hat\beta$ by minimizing the following
+\begin{equation}
+{ \hbox{arg min} \atop {\beta \atop  ||\beta||=1, \beta_1>0} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  \rho_{\tau} \left(Y_{ij}-\hat g(X_{ls}^\top \tilde\beta)-\hat g^{'}(X_{ls}^\top \tilde\beta) X_{ij,ls}^\top \beta-\hat f(t_{ij})-\hat \alpha_i \right)  w_{ij,ls}, \nonumber
+\end{equation}
+where $X_{ij,ls}=X_{ij}-X_{ls}$, the estimators $\hat g(X_{ls}^\top\tilde \beta)$, $\hat g^{'}(X_{ls}^\top\tilde \beta)$, $\hat f(t_{ls})$ and $\hat \alpha_i$ are given in Subsection 3.1. Let $\hat \gamma^*=\sqrt{n}\left( \hat\beta-\beta\right)$, $M_{ij,ls}=\hat g^{'} (X_{ls}^\top \tilde \beta) X_{ij,ls}$ and
+\begin{equation}
+r_{ij,ls}=-\left(g_{\tau}(X_{ls}^\top \beta(\tau))+f_{\tau}(t_{ls})+\alpha_i(\tau) \right)+ \left(\hat g(X_{ls}^\top \tilde\beta)+\hat g^{'}(X_{ls}^\top \tilde\beta) X_{ij,ls}^\top \beta(\tau)+\hat f(t_{ij})+\hat \alpha_i \right),\nonumber
+\end{equation} 
+then $\hat\gamma^*$ minimizes 
+\begin{equation}
+\aleph_n=\sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} \left[ \rho_{\tau} \left( \varepsilon_i-r_{ij,ls}-M_{ij,ls}\gamma^*/\sqrt{n}\right)- \rho_{\tau} \left( \varepsilon_i-r_{ij,ls}\right)\right]. \nonumber
+\end{equation}
+Then, $\aleph_n$ can be written as follows by using Kinght's identify
+\begin{align}
+\aleph_n &=-{1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} \psi_{\tau} (\varepsilon_i)M_{ij,ls}\gamma^* \nonumber\\
+&+\sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} \int_{r_{ij}}^{ r_{ij}+M_{ij,ls}\gamma^*/\sqrt{n} } \left[ I(\varepsilon_i\leq s)-I(\varepsilon_i\leq 0)\right]ds \nonumber\\
+&=\aleph_{1n}(\gamma^*)+\aleph_{2n}(\gamma^*),\nonumber
+\end{align}
+where
+\begin{align}
+\aleph_{1n}(\gamma^*)&=-{1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} \psi_{\tau} (\varepsilon_i)M_{ij,ls}\gamma^*,\nonumber\\
+\aleph_{2n}(\gamma^*)&=\sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} \int_{r_{ij}}^{ r_{ij}+M_{ij,ls}\gamma^*/\sqrt{n} } \left[ I(\varepsilon_i\leq s)-I(\varepsilon_i\leq 0)\right]ds.\nonumber
+\end{align}
+Proceeding along the same way of Lv {\it et al.} (2014) we have the following presentation by taking the expectation of $\aleph_{2n}(\gamma^*)$:
+\begin{equation}
+\aleph_{2n}(\gamma^*)=\aleph_{2n1}(\gamma^*)+\aleph_{2n1}(\gamma^*)+o_p(1),\nonumber
+\end{equation}
+where
+\begin{align}
+\aleph_{2n1}(\gamma^*)&={1\over {2N} } \left(\gamma^*\right)^2 \left( \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} f_Y(q_{\tau}(X,t)|X^\top_{ij}\tilde\beta) M^2_{ij,ls}\right),\nonumber\\
+\aleph_{2n2}(\gamma^*)&={1\over \sqrt{N} } \gamma^* \left( \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}  w_{ij,ls} f_Y(q_{\tau}(X,t)|X^\top_{ij}\tilde\beta) M_{ij,ls} r_{ij,ls}\right).\nonumber
+\end{align}
+By Lemma 3 of Lv {\it et al.} (2014), we have
+\begin{align}
+\aleph_{2n1}(\gamma^*) &=\left( \gamma^*\right)^2 {\cal W}_{2n} + o_p(1),\label{7198}
+\end{align}
+where ${\cal W}_{2n}= E[  f_Y(q_{\tau} (X,t)|X^\top \beta(\tau))\{g^{'}(X^\top\beta(\tau)) \}^2 \times   (X-\mu_{\beta(\tau)}(X) )  (X-\mu_{\beta(\tau)}(X))^\top ] 
+$ with $\mu_{\beta}(x)=E[X|X^\top\beta=x^\top\beta]$. We also note that
+\begin{align}
+r_{ij,ls} &=g(X_{ij}^\top\tilde \beta) -g(X_{ij}^\top\tilde \beta(\tau))- \left(g(X_{ij}^\top\tilde \beta)-g(X_{ls}^\top\tilde \beta)-g^{'}(X_{ls}^\top\tilde \beta)
+X_{ij,ls}^\top \tilde \beta\right) \nonumber\\
+&+\left[ \hat g(X_{ls}^\top\tilde \beta)-g(X_{ls}^\top\tilde \beta)\right] + \left[\hat g^{'}(X_{ls}^\top\tilde \beta)-g^{'}(X_{ls}^\top\tilde \beta) X_{ij,ls}^\top\right] \tilde \beta-\hat g^{'}(X_{ls}^\top\tilde \beta)X_{ij,ls}^\top (\tilde \beta-\beta(\tau)) \nonumber\\
+&+ (\hat f(t_{ij}-f(t_{ij})) + ((\hat \alpha_i-\alpha_i(\tau))  \nonumber\\
+&= \left( 1 \quad  X_{ij,ls}^\top \tilde \beta/h\right)
+\begin{pmatrix}
+  \hat g (X_{ls}^\top\tilde\beta)- g (X_{ls}^\top\tilde\beta)  \cr
+ h \left( \hat g^{'} (X_{ls}^\top\tilde\beta)- g^{'} (X_{ls}^\top\tilde\beta)\right)
+\end{pmatrix} +(\hat f(t_{ij}-f(t_{ij})) + ((\hat \alpha_i-\alpha_i(\tau)) \nonumber\\
+&+g^{'} (X_{ij}^\top\tilde\beta)X_{ij}^\top \beta_d-\hat g^{'}(X_{ls}^\top \tilde \beta)X_{ij,ls}^\top\beta_d-{1\over 2}g^{''}(X_{ls}^\top\tilde\beta) (X_{ij,ls}^\top\tilde\beta)^2+O\left[\delta_{\beta}+(X_{ij,ls}^\top\tilde\beta)^3\right],\nonumber
+\end{align}
+where $\beta_d=\tilde\beta-\beta(\tau)$ and $\delta_{\beta}=|\tilde\beta-\beta(\tau)|$. Then $\aleph_{2n2}(\gamma^*)$ can be represented as 
+\begin{equation}
+\aleph_{2n2}(\gamma^*)=\left(\aleph_{2n21}(\gamma^*)+\aleph_{2n22}(\gamma^*)\right)\gamma^*+O(\delta^2_{\beta}+h^3),\nonumber
+\end{equation}
+where 
+\begin{align}
+&\aleph_{2n21}(\gamma^*)={1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}   f_Y(q_{\tau}(X,t)|X^\top_{ij}\tilde\beta)  w_{ij,ls} M_{ij,ls}\nonumber\\
+&  \times  \left( 1 \quad  X_{ij,ls}^\top \tilde \beta/h\right)\nonumber
+\begin{pmatrix}
+  \hat g (X_{ls}^\top\tilde\beta)- g (X_{ls}^\top\tilde\beta)  \cr
+ h \left( \hat g^{'} (X_{ls}^\top\tilde\beta)- g^{'} (X_{ls}^\top\tilde\beta)\right)
+\end{pmatrix},  \nonumber
+\end{align}
+\begin{align}
+&\aleph_{2n22}(\gamma^*)={1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}   f_Y(q_{\tau}(X,t)|X^\top_{ij}\tilde\beta)  w_{ij,ls} M_{ij,ls}\nonumber\\
+& \times \left( g^{'} (X_{ij}^\top\tilde\beta)X_{ij}^\top \beta_d-\hat g^{'}(X_{ls}^\top \tilde \beta)X_{ij,ls}^\top\beta_d-{1\over 2}g^{''}(X_{ls}^\top\tilde\beta) (X_{ij,ls}^\top\tilde\beta)^2  (\hat f(t_{ij}-f(t_{ij})) + ((\hat \alpha_i-\alpha_i(\tau))\right). \nonumber
+\end{align}
+By the asymptotic results of Theorems 3.2 and 3.3, via direct calaulating we further have
+\begin{align}
+&\aleph_{2n21}(\gamma^*)=T_1+T_2+o_p(1),\nonumber
+\end{align}
+where 
+\begin{align}
+&T_1={1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i} \psi_{\tau} (\varepsilon_i)w_{ij,ls}\left (\hat g^{'} (X_{ls}^\top\tilde \beta)(\mu_{\beta(\tau)}(X_{ls})-X_{ls})\right),\nonumber\\
+&T_2={1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i}   f_Y(q_{\tau}(X,t)|X^\top_{ij}\tilde\beta)  w_{ij,ls} M_{ij,ls}\times 
+\left({1\over 2} g^{''}(x^\top\tilde\beta)\mu_2 h^2 -g^{'}(x^\top\tilde\beta)\mu_{\beta(\tau)}(x)\beta_d\right).\nonumber
+\end{align}
+By incorporating $T_1$ with $\aleph_{1n}(\gamma^*)$, $T_2$ with $\aleph_{2n22}(\gamma^*)$, respectively, we have
+\begin{equation}
+\aleph_{1n}(\gamma^*)+T_1\gamma^*=-\sqrt{n} {\cal W}_{1n} \gamma^* +o_p(1),   \label{7298}
+\end{equation}
+\begin{equation}
+\aleph_{2n22}(\gamma^*)+T_2=-\sqrt{n} {\cal  W}_{2n} \beta_d + o_p(1), \label{7398}
+\end{equation}
+where ${\cal W}_{1n}={1\over \sqrt{N} } \sum_{l=1}^n \sum_{s=1}^{n_i} \sum_{i=1}^n \sum_{j=1}^{n_i} \psi_{\tau}(\varepsilon_{ij})w_{ij,ls}\left(\hat g^{'} (X_{ls}^\top\tilde\beta)[X_{ij}-\mu_{\beta(\tau)}(X_{ls}))\right]$ and ${\cal  W}_{2n}$ is defined in (\ref{7198}). Combinating (\ref{7198}), (\ref{7298}) and (\ref{7398}), we have
+\begin{equation}
+\aleph_{n}(\gamma^*)=\left( \gamma^*\right)^2 {\cal W}_{2n}+\left[{\cal W}_{1n}+\sqrt{n}  {\cal W}_{2n}\beta_d \right]\gamma^*+o_p(1). \nonumber
+\end{equation}
+Following Lemma 2 of Lv {\it et al.} (2014), $\hat{\gamma}^*$, which miniminzes $\aleph_{n}(\gamma^*)$, can be expressed as
+\begin{equation}
+\hat{\gamma}^*={\cal W}^{-1}_{2n}{\cal W}_{1n}+\sqrt{N}(\tilde \beta-\beta(\tau))+o_p(1),
+\end{equation}
+it also implies that
+\begin{equation}
+\hat \beta-\beta(\tau)={\cal W}^{-1}_{2n}{\cal W}_{1n}+(\tilde \beta-\beta(\tau))+o_p(1/\sqrt{N}),
+\end{equation}
+By the Cramer-Wald device and CLT, using similar analysis as Xia and H${\ddot a}$rdle (2006), we can complete the proof. 
+
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\vskip3mm
+
+\noindent{\bf Proof of Theorem 3.2}:
+
+\begin{proof} The proof this Theorem is similar to that of Cheng {\it et al.} (2011), we can see the difference between $\hat q^*_{u,\tau}(z_u)$ defined in (\ref{3999}) and the estimator of Cheng {\it et al.} (2011) is only that the covariate $Z_u(ij)=X_{ij}^\top\beta$ is replaced by its estimator $\hat Z_u(ij)=X_{ij}^\top\hat\beta$, which also depends on the kernel function $K\left( {( {z_u-Z_u(ij))} / h_1 }\right)$,$\hat f_w(W_u(ij))$, $\hat f(Z(ij))$ and $\hat Q_{y_{ij}}(\tau |Z({ij}),\alpha)$, and where $\hat Q_{y_{ij}}(\tau |Z({ij}),\alpha)$ is related to the kernel functions $V \left(  {{(Z(ij)-z)} / h}\right)$ and $ L \left( { {(z-Z(ij))} / h}\right)$ and By Taylor expansion for multivariable function of $q(Z_1(ij),Z_2(ij))$. Then, the proof of Theorem \ref{37218} can be completed by the results of Cheng {\it et al.} (2011) and Taylor expansion for kernel function, such as $K_{h_1}\left( { {z_u-\hat Z_u(ij)}  }\right)$:
+\begin{align}
+K_{h_1}\left( { {z_u-\hat Z_u(ij)}  }\right)=K_{h_1}\left( { {z_u-Z_u(ij)}  }\right)+ K^{'}_{h_1}\left( { {z_u-Z_u(ij)}  }\right)  X_{ij}^\top
+(\hat \beta-\beta) +o_p(1)
+\end{align}
+
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\vskip5mm
+\noindent{\bf Proof of Theorem 3.3}:
+
+\begin{proof}
+The proof is similar to that of Theorem \ref{37218}.
+\end{proof}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vskip5mm
+
+
+\noindent{\bf Proof of Theorem 4.1}:
+
+\begin{proof}
+This can be completed directly from the proof of Theorem 3.1 and the results of Theorem 3 of Lv {\it et al.} (2014).
+\end{proof}
+
+
+
+
+
+
+
+
+\end{document}
+
